@@ -165,6 +165,17 @@ function menu_list_bot {
 
 hash jq 2>/dev/null || { echo >&2 "Error: You need to install 'jq', Please install it before using this script."; exit 1; }
 
+echo '''
+##############################################
+# Simple bash botnet Manager by @joydragon
+# C2 on Github Gists
+#
+# This is intended for educational purposes only
+# It is not perfect and it is not the intent
+# If you can't see it, it's your fault :P
+##############################################
+'''
+
 if [ -z "$TOK" ]; then
 	echo "ERROR: Github token is not present. Please generate the token with Gists permissions before using this script."
 	echo "More information here: https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token"
