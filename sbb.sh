@@ -112,7 +112,7 @@ fi
 
 ##############################################
 # First step, register yourself
-upd "$(uname -a)"
+upd "$(hostname -I);$(uname -a)"
 
 ##############################################
 # Wait for commands
