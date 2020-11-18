@@ -97,7 +97,14 @@ function com {
 ##############################################
 
 ##############################################
-# Run and delete yourself
+# Run and background yourself
+if [ "$#" == "0" ];then
+	nohup bash "$(realpath "$0")" "--fg" 0<&- &> /dev/null &
+	exit 0
+fi
+
+##############################################
+# Delete yourself
 rm $(realpath "$0");
 
 if [ -z "${TOK}" ]; then

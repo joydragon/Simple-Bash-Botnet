@@ -61,13 +61,13 @@ function sign {
 ##############################################
 # Message signature (in Base64) verification
 function ver {
-	if [ -n "$PUBLIC" ]; then
-        VAR=($(echo "$1" | tr ":" "\n"))
-        if [ -n "${VAR[0]}" ] &&  [ -n "${VAR[1]}" ]; then
-                echo -e ${VAR[0]} | openssl dgst -sha1 -verify <(echo -e "$PUBLIC") -signature <(echo ${VAR[1]} | base64 -d)
-        else
-                echo "Failed"
-        fi
+	if [ -n "${PUBLIC}" ]; then
+        	VAR=($(echo "$1" | tr ":" "\n"))
+        	if [ -n "${VAR[0]}" ] &&  [ -n "${VAR[1]}" ]; then
+        	        echo -e ${VAR[0]} | openssl dgst -sha1 -verify <(echo -e "$PUBLIC") -signature <(echo ${VAR[1]} | base64 -d)
+        	else
+        	        echo "Failed"
+        	fi
 	fi
 }
 
@@ -114,12 +114,12 @@ function menu_list_files {
 			echo "Escribe tu comando:"
 			echo ""
 			read COM
-			com "$BOT_URL" "$COM"
+			com "${BOT_URL}" "${COM}"
 			break
 		elif [ -n "$opt" ]; then
 			CON=$(echo ${FILES_LIST[$((REPLY-1))]} | sed -e "s/^.*://")
 			echo ""
-			dec "$CON"
+			dec "${CON}"
 			echo "Presiona cualquier tecla para seguir"
 			read -n1
 			break
@@ -147,7 +147,7 @@ function menu_list_bot {
 	do
 		if [ -n "$opt" ]; then
 			URL=$(echo $opt | sed -e "s/^.*::://")
-			list_files "$URL"
+			list_files "${URL}"
 			while [ "$EXIT" -ne "1" ]; do
 				menu_list_files
 			done
@@ -176,27 +176,27 @@ echo '''
 ##############################################
 '''
 
-if [ -z "$TOK" ]; then
+if [ -z "${TOK}" ]; then
 	echo "ERROR: Github token is not present. Please generate the token with Gists permissions before using this script."
 	echo "More information here: https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token"
 	exit
 fi
 
-if [ -z "$PUBLIC" ]; then
-	if [ ! -f "$PRIVATE_FILE" ]; then
+if [ -z "${PUBLIC}" ]; then
+	if [ ! -f "${PRIVATE_FILE}" ]; then
 		echo "RSA private key not found"
 		echo "Generating RSA keys first."
-		openssl genrsa -out "$PRIVATE_FILE" 4096
+		openssl genrsa -out "${PRIVATE_FILE}" 4096
 		echo ""
 	fi
-	if [ ! -f "$PUBLIC_FILE" ]; then
+	if [ ! -f "${PUBLIC_FILE}" ]; then
 		echo "Extracting the public key from the private one."
-		openssl rsa -in "$PRIVATE_FILE" -out "$PUBLIC_FILE" -pubout > /dev/null
+		openssl rsa -in "${PRIVATE_FILE}" -out "${PUBLIC_FILE}" -pubout > /dev/null
 		echo ""
 	fi
-	echo "Please add the public key text stored in '$PUBLIC_FILE' fully to each bot and this manager also."
-	PUBLIC=$(cat "$PUBLIC_FILE")
-	echo "$PUBLIC"
+	echo "Please add the public key text stored in '${PUBLIC_FILE}' fully to each bot and this manager also."
+	PUBLIC=$(cat "${PUBLIC_FILE}")
+	echo "${PUBLIC}"
 	echo ""
 fi
 
